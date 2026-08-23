@@ -1,1 +1,34 @@
-const steps=[...document.querySelectorAll('.form-step')],bar=[...document.querySelectorAll('.stepbar span')];let current=0;function showStep(n){current=n;steps.forEach((s,i)=>s.classList.toggle('active',i===n));bar.forEach((b,i)=>b.classList.toggle('on',i<=n));window.scrollTo({top:0,behavior:'smooth'});if(n===4)buildReview()}function req(ids){for(const id of ids){const e=document.getElementById(id);if(!e||!e.checkValidity()){e?.reportValidity();return false}}return true}document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>{if(current===0&&!req(['teamName','captain','className','sectionName']))return;if(current===1&&!req(['teamSize']))return;if(current===2&&!document.querySelector('.event-pick input:checked')){alert('Please select at least one event.');return}if(current===3&&!req(['mobile','email']))return;showStep(Math.min(4,current+1))});document.querySelectorAll('[data-prev]').forEach(b=>b.onclick=()=>showStep(Math.max(0,current-1)));const size=document.getElementById('teamSize'),members=document.getElementById('members');function buildMembers(){members.innerHTML='';const n=Number(size.value);for(let i=2;i<=n;i++){const d=document.createElement('div');d.className='member';d.innerHTML=`<b>TEAM MEMBER ${String(i).padStart(2,'0')}</b><div class="form-grid" style="margin-top:12px"><div class="field"><label>Name *</label><input class="m-name" required></div><div class="field"><label>Class *</label><select class="m-class" required><option value="">Select</option><option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div><div class="field"><label>Section *</label><input class="m-section" required></div><div class="field"><label>Roll No. *</label><input class="m-roll" required></div></div>`;members.appendChild(d)}}size.onchange=buildMembers;buildMembers();function buildReview(){const events=[...document.querySelectorAll('.event-pick input:checked')].map(x=>x.value);const ms=[{name:document.getElementById('captain').value,cls:document.getElementById('className').value,sec:document.getElementById('sectionName').value}];document.querySelectorAll('.member').forEach(d=>ms.push({name:d.querySelector('.m-name').value,cls:d.querySelector('.m-class').value,sec:d.querySelector('.m-section').value,roll:d.querySelector('.m-roll').value}));document.getElementById('review').innerHTML=`<div><b>TEAM</b><br>${esc(document.getElementById('teamName').value)} · ${esc(document.getElementById('className').value)} / ${esc(document.getElementById('sectionName').value)}</div><div><b>EVENTS</b><br>${events.map(esc).join(', ')}</div><div><b>MEMBERS</b><br>${ms.map((m,i)=>`${i+1}. ${esc(m.name)} — ${esc(m.cls)}/${esc(m.sec)}${m.roll?' — Roll '+esc(m.roll):''}`).join('<br>')}</div><div><b>CONTACT</b><br>${esc(document.getElementById('mobile').value)} · ${esc(document.getElementById('email').value)}</div>`}function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}document.getElementById('regForm').onsubmit=async e=>{e.preventDefault();const agree=document.getElementById('agree');if(!agree.checked){document.getElementById('formError').textContent='Please confirm the registration information.';return}const events=[...document.querySelectorAll('.event-pick input:checked')].map(x=>x.value);const membersData=[{name:document.getElementById('captain').value,class:document.getElementById('className').value,section:document.getElementById('sectionName').value}];document.querySelectorAll('.member').forEach(d=>membersData.push({name:d.querySelector('.m-name').value,class:d.querySelector('.m-class').value,section:d.querySelector('.m-section').value,rollNo:d.querySelector('.m-roll').value}));const id='RK26-'+Math.random().toString(36).slice(2,8).toUpperCase();const data={registrationID:id,teamDetails:{teamName:document.getElementById('teamName').value,captain:document.getElementById('captain').value,class:document.getElementById('className').value,section:document.getElementById('sectionName').value,teamSize:membersData.length},members:membersData,events,contactDetails:{mobile:document.getElementById('mobile').value,email:document.getElementById('email').value},remarks:document.getElementById('remarks').value,submittedAt:firebase.database.ServerValue.TIMESTAMP,status:'received'};try{await db.ref('registrations/'+id).set(data);document.getElementById('regForm').style.display='none';document.querySelector('.stepbar').style.display='none';document.getElementById('success').classList.add('show');document.getElementById('regId').textContent=id}catch(err){document.getElementById('formError').textContent='Registration could not be submitted. Please try again.';console.error(err)}};
+
+import {db,ref,push,set} from "../js/firebase.js";
+const form=document.querySelector("#registrationForm"), size=document.querySelector("#teamSize"), members=document.querySelector("#members"), msg=document.querySelector("#formMessage");
+function renderMembers(){
+ const n=Math.max(0,Number(size.value||1)-1);
+ members.innerHTML="";
+ for(let i=1;i<=n;i++) members.insertAdjacentHTML("beforeend",`<div class="field"><label>Member ${i} Name *</label><input data-member="${i}" required></div>`);
+}
+size.addEventListener("change",renderMembers); renderMembers();
+form.addEventListener("submit",async e=>{
+ e.preventDefault(); msg.textContent="";
+ const deadline=new Date("2026-08-31T23:59:59+05:30").getTime();
+ if(Date.now()>deadline){msg.textContent="Registration is closed.";return}
+ const events=[...document.querySelectorAll('.event-select input:checked')].map(x=>x.value);
+ if(!events.length){msg.textContent="Please select at least one event.";return}
+ const mobile=document.querySelector("#mobile").value.trim();
+ if(!/^\d{10}$/.test(mobile)){msg.textContent="Enter a valid 10-digit mobile number.";return}
+ const teamSize=Number(size.value);
+ const additional=[...document.querySelectorAll("[data-member]")].map(x=>x.value.trim());
+ if(additional.some(x=>!x)){msg.textContent="Please complete every team member name.";return}
+ const record={
+  teamName:document.querySelector("#teamName").value.trim(),
+  teamSize, leaderName:document.querySelector("#leaderName").value.trim(),
+  leaderClass:document.querySelector("#leaderClass").value, leaderSection:document.querySelector("#leaderSection").value.trim(),
+  mobile,email:document.querySelector("#email").value.trim(),members:additional,events,
+  remarks:document.querySelector("#remarks").value.trim(),status:"received",
+  createdAt:new Date().toISOString()
+ };
+ try{
+  const r=push(ref(db,"registrations")); await set(r,record);
+  const id="RK26-"+r.key.slice(-8).toUpperCase();
+  location.href=`registration-confirmation.html?id=${encodeURIComponent(id)}`;
+ }catch(err){console.error(err);msg.textContent="Unable to submit right now. Please try again."}
+});
