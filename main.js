@@ -1,1 +1,1 @@
-const y=document.querySelector('[data-year]');if(y)y.textContent=new Date().getFullYear();
+const toggle=document.getElementById('menuToggle'),nav=document.getElementById('mainNav');if(toggle)toggle.addEventListener('click',()=>nav.classList.toggle('open'));document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>nav&&nav.classList.remove('open')));document.querySelectorAll('[data-year]').forEach(x=>x.textContent=new Date().getFullYear());

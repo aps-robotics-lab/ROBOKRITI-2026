@@ -1,0 +1,1 @@
+{"rules":{".read":false,".write":false,"registrations":{".read":"auth != null","$id":{".write":"!data.exists() || auth != null"}},"helpTickets":{".read":"auth != null","$id":{".write":"auth != null || !data.exists()"}}}}
