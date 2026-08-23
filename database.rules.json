@@ -1,1 +1,18 @@
-{"rules":{".read":false,".write":false,"registrations":{".read":"auth != null","$id":{".write":"!data.exists() || auth != null"}},"helpTickets":{".read":"auth != null","$id":{".write":"auth != null || !data.exists()"}}}}
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "registrations": {
+      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
+      ".write": true
+    },
+    "helpRequests": {
+      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
+      ".write": true
+    },
+    "authorAccess": {
+      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
+      ".write": "auth != null && root.child('authorAccess').child(auth.uid).val() == true"
+    }
+  }
+}

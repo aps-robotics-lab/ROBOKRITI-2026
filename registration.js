@@ -1,69 +1,119 @@
-import {db,ref,push,set} from "../js/firebase.js";
+import { db, ref, push, set } from "../js/firebase.js";
 
-const form=document.querySelector("#registrationForm");
-const size=document.querySelector("#teamSize");
-const members=document.querySelector("#members");
-const msg=document.querySelector("#formMessage");
+const form = document.querySelector("#registrationForm");
+const size = document.querySelector("#teamSize");
+const members = document.querySelector("#members");
+const msg = document.querySelector("#formMessage");
+const submit = form?.querySelector('button[type="submit"]');
 
-const renderMembers=()=>{
-  if(!size||!members)return;
-  const n=Math.min(4,Math.max(0,Number(size.value||1)-1));
-  members.innerHTML="";
-  for(let i=1;i<=n;i++){
-    members.insertAdjacentHTML("beforeend",`<div class="field"><label for="member-${i}">Member ${i} Name *</label><input id="member-${i}" data-member="${i}" maxlength="80" required></div>`);
+const DEADLINE = Date.parse("2026-08-31T23:59:59+05:30");
+const setMessage = (text, type = "error") => {
+  if (!msg) return;
+  msg.textContent = text;
+  msg.dataset.type = type;
+  msg.setAttribute("role", type === "error" ? "alert" : "status");
+};
+
+const renderMembers = () => {
+  if (!size || !members) return;
+  const teamSize = Math.min(5, Math.max(1, Number(size.value || 1)));
+  const count = teamSize - 1;
+  const existing = new Map([...members.querySelectorAll("[data-member]")].map((input) => [input.dataset.member, input.value]));
+  members.replaceChildren();
+  for (let i = 1; i <= count; i += 1) {
+    const field = document.createElement("div");
+    field.className = "field";
+    const label = document.createElement("label");
+    label.htmlFor = `member-${i}`;
+    label.textContent = `Member ${i} Name *`;
+    const input = document.createElement("input");
+    input.id = `member-${i}`;
+    input.name = `member-${i}`;
+    input.dataset.member = String(i);
+    input.maxLength = 80;
+    input.required = true;
+    input.autocomplete = "name";
+    input.value = existing.get(String(i)) || "";
+    field.append(label, input);
+    members.appendChild(field);
   }
 };
 
-if(size){
-  size.addEventListener("change",renderMembers);
-  renderMembers();
-}
+size?.addEventListener("change", renderMembers);
+renderMembers();
 
-if(form){
-  form.addEventListener("submit",async e=>{
-    e.preventDefault();
-    if(msg)msg.textContent="";
-    const deadline=new Date("2026-08-31T23:59:59+05:30").getTime();
-    if(Date.now()>deadline){if(msg)msg.textContent="Registration is closed.";return;}
+form?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setMessage("");
 
-    const events=[...document.querySelectorAll('.event-select input:checked')].map(x=>x.value);
-    if(!events.length){if(msg)msg.textContent="Please select at least one event.";return;}
+  if (Date.now() > DEADLINE) {
+    setMessage("Registration is closed.");
+    return;
+  }
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    setMessage("Please complete all required fields.");
+    return;
+  }
 
-    const mobile=document.querySelector("#mobile")?.value.trim()||"";
-    if(!/^[6-9]\d{9}$/.test(mobile)){if(msg)msg.textContent="Enter a valid 10-digit Indian mobile number.";return;}
+  const events = [...document.querySelectorAll('.event-select input[type="checkbox"]:checked')].map((input) => input.value);
+  if (!events.length) {
+    setMessage("Please select at least one event.");
+    return;
+  }
 
-    const email=document.querySelector("#email")?.value.trim()||"";
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(msg)msg.textContent="Enter a valid email address.";return;}
+  const mobile = document.querySelector("#mobile")?.value.trim() || "";
+  if (!/^[6-9]\d{9}$/.test(mobile)) {
+    setMessage("Enter a valid 10-digit Indian mobile number.");
+    return;
+  }
 
-    const teamSize=Number(size?.value||0);
-    if(teamSize<1||teamSize>5){if(msg)msg.textContent="Select a team size from 1 to 5.";return;}
+  const email = document.querySelector("#email")?.value.trim().toLowerCase() || "";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setMessage("Enter a valid email address.");
+    return;
+  }
 
-    const additional=[...document.querySelectorAll("[data-member]")].map(x=>x.value.trim());
-    if(additional.length!==teamSize-1||additional.some(x=>!x)){if(msg)msg.textContent="Please complete every team member name.";return;}
+  const teamSize = Number(size?.value || 0);
+  const additional = [...document.querySelectorAll("[data-member]")].map((input) => input.value.trim()).filter(Boolean);
+  if (teamSize < 1 || teamSize > 5 || additional.length !== teamSize - 1) {
+    setMessage("Please complete every team member name.");
+    return;
+  }
 
-    const record={
-      teamName:document.querySelector("#teamName")?.value.trim()||"",
-      teamSize,
-      leaderName:document.querySelector("#leaderName")?.value.trim()||"",
-      leaderClass:document.querySelector("#leaderClass")?.value||"",
-      leaderSection:document.querySelector("#leaderSection")?.value.trim()||"",
-      mobile,email,members:additional,events,
-      remarks:document.querySelector("#remarks")?.value.trim()||"",
-      status:"received",
-      createdAt:new Date().toISOString()
-    };
+  const record = {
+    teamName: document.querySelector("#teamName")?.value.trim() || "",
+    teamSize,
+    leaderName: document.querySelector("#leaderName")?.value.trim() || "",
+    leaderClass: document.querySelector("#leaderClass")?.value || "",
+    leaderSection: document.querySelector("#leaderSection")?.value.trim() || "",
+    mobile,
+    email,
+    members: additional,
+    events,
+    remarks: document.querySelector("#remarks")?.value.trim() || "",
+    status: "received",
+    createdAt: new Date().toISOString()
+  };
 
-    const submit=form.querySelector('button[type="submit"]');
-    if(submit)submit.disabled=true;
-    try{
-      const r=push(ref(db,"registrations"));
-      await set(r,record);
-      const id="RK26-"+r.key.slice(-8).toUpperCase();
-      location.href=`registration-confirmation.html?id=${encodeURIComponent(id)}`;
-    }catch(err){
-      console.error(err);
-      if(msg)msg.textContent="Unable to submit right now. Please try again.";
-      if(submit)submit.disabled=false;
+  if (submit) {
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    submit.textContent = "SUBMITTING…";
+  }
+
+  try {
+    const registrationRef = push(ref(db, "registrations"));
+    await set(registrationRef, record);
+    const id = `RK26-${registrationRef.key.slice(-8).toUpperCase()}`;
+    location.assign(`registration-confirmation.html?id=${encodeURIComponent(id)}`);
+  } catch (error) {
+    console.error("RoboKriti registration failed:", error);
+    setMessage("Unable to submit right now. Please check your connection and try again.");
+    if (submit) {
+      submit.disabled = false;
+      submit.removeAttribute("aria-busy");
+      submit.textContent = "SUBMIT REGISTRATION →";
     }
-  });
-}
+  }
+});

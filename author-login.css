@@ -1,0 +1,6 @@
+/* RoboKriti author login */
+.success-page{min-height:100svh;display:grid;place-items:center;padding:30px 18px;background:radial-gradient(circle at 50% 35%,rgba(55,231,255,.08),transparent 34%)}
+.success-page .field{margin:14px 0}
+.success-page .field label{display:block;margin-bottom:8px;font:10px "DM Mono";color:#cbd3da}
+.success-page input{width:100%;padding:14px;border:1px solid var(--line);border-radius:13px;background:#080d13;color:#fff;outline:0}
+.success-page .success-box{width:min(520px,100%)}

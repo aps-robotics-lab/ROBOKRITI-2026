@@ -1,0 +1,9 @@
+/* RoboKriti event detail pages */
+.page-hero{background:radial-gradient(circle at 75% 25%,rgba(55,231,255,.08),transparent 30%)}
+.page-content{padding:60px 0 130px}
+.page-content .panel{padding:32px;min-height:200px}
+.page-content .panel h2{font:700 clamp(30px,4vw,54px) "Space Grotesk"}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cards-3 .panel{min-height:240px}
+.message{margin-top:20px}
+@media(max-width:800px){.cards-3{grid-template-columns:1fr}.page-content{padding-top:40px}}

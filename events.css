@@ -1,3 +1,9 @@
-/* events.html */
-.pagehead:before{content:"EVENTS";position:absolute;right:5%;bottom:35px;color:#ffffff08;font:800 100px 'Barlow Condensed';letter-spacing:.04em;pointer-events:none}
-.card{animation-delay:.1s}
+/* RoboKriti Events */
+.page-hero{background:radial-gradient(circle at 70% 35%,rgba(55,231,255,.08),transparent 30%)}
+.page-content{padding:65px 0 130px}
+.events-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.event-card{min-height:390px;padding:34px;display:flex;flex-direction:column;justify-content:flex-start}
+.event-card h3{font-size:clamp(34px,4.8vw,66px);letter-spacing:-.04em}
+.event-links{margin-top:auto}
+.event-card:nth-child(even){background:linear-gradient(145deg,rgba(244,199,107,.045),rgba(255,255,255,.012))}
+@media(max-width:700px){.events-grid{grid-template-columns:1fr}.page-content{padding-top:40px}}

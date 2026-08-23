@@ -1,3 +1,10 @@
-/* about.html */
-.pagehead:before{content:"ABOUT";position:absolute;right:5%;bottom:35px;color:#ffffff08;font:800 100px 'Barlow Condensed';letter-spacing:.04em;pointer-events:none}
-.card{animation-delay:.1s}
+/* RoboKriti About */
+.page-hero{background:radial-gradient(circle at 78% 30%,rgba(55,231,255,.08),transparent 30%)}
+.page-content{padding:70px 0 130px}
+.page-content .panel{min-height:260px;padding:38px;position:relative;overflow:hidden}
+.page-content .panel:before{content:"ABOUT // ROBOKRITI";position:absolute;top:20px;right:22px;font:9px "DM Mono";color:var(--rk-cyan);opacity:.65}
+.page-content .panel h2{font:700 clamp(28px,4vw,52px) "Space Grotesk"}
+.page-content .prose{font-size:16px;line-height:1.9;color:#aeb8c2}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cards-3 .panel{min-height:220px}
+@media(max-width:800px){.cards-3{grid-template-columns:1fr}.page-content{padding-top:45px}.page-content .panel{padding:28px}}

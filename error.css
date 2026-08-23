@@ -1,0 +1,6 @@
+/* RoboKriti 404 */
+.error-page{min-height:100svh;display:grid;place-items:center;padding:30px;background:radial-gradient(circle at 50% 40%,rgba(55,231,255,.08),transparent 32%)}
+.error-terminal{width:min(820px,100%);padding:clamp(28px,6vw,60px);border:1px solid var(--line);border-radius:28px;background:#080d13;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.error-terminal:before{content:"SYSTEM // ROUTE FAILURE";display:block;font:10px "DM Mono";color:var(--rk-cyan);letter-spacing:.14em;margin-bottom:20px}
+.error-code{font:700 clamp(80px,18vw,180px) "Space Grotesk";line-height:.8;letter-spacing:-.08em}
+.error-page .actions{margin-top:30px}

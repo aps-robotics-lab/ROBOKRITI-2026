@@ -1,3 +1,9 @@
-/* rules.html */
-.pagehead:before{content:"RULES";position:absolute;right:5%;bottom:35px;color:#ffffff08;font:800 100px 'Barlow Condensed';letter-spacing:.04em;pointer-events:none}
-.card{animation-delay:.1s}
+/* RoboKriti Rules index */
+.page-hero{background:radial-gradient(circle at 70% 35%,rgba(244,199,107,.07),transparent 30%)}
+.page-content{padding:65px 0 130px}
+.rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.rule-tile{padding:30px;min-height:250px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.012));transition:.4s var(--rk-ease)}
+.rule-tile:hover{transform:translateY(-7px);border-color:rgba(55,231,255,.3);box-shadow:var(--shadow)}
+.rule-tile h2{font:700 clamp(28px,4vw,48px) "Space Grotesk";margin:50px 0 10px}
+.rule-tile p{color:var(--muted);line-height:1.65}
+@media(max-width:700px){.rules-grid{grid-template-columns:1fr}}
