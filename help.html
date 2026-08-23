@@ -1,1 +1,513 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="ROBOkriti 2026 APS Robotics Championship"><link rel="stylesheet" href="css/global.css"><link rel="stylesheet" href="css/responsive.css"><link rel="stylesheet" href="css/help.css"><title>Help Centre · ROBOkriti 2026</title></head><body><header class="site-header"><div class="container nav"><a class="brand" href="index.html">ROBO<span>kriti</span> 2026</a><button class="menu-btn" data-menu-btn aria-expanded="false" aria-label="Menu"><span class="hamb"><i></i><i></i><i></i></span></button></div></header><nav class="menu" data-menu><a href="index.html">HOME</a><a href="about.html">ABOUT</a><a href="events.html">EVENTS</a><a href="registration.html">REGISTRATION</a><a href="help.html">HELP CENTRE</a><a href="contact.html">CONTACT</a></nav><main><section class="hero"><div class="container"><div class="eyebrow">Help Centre</div><h1>We're here to <span class="accent">help</span></h1><p>Submit an enquiry or track a request.</p></div></section><section class="section"><div class="container grid grid-2 help-grid"><form id="helpForm" class="card"><h2>Submit Enquiry</h2><div class="field"><label>Name *</label><input name="name" required></div><div class="field"><label>Email *</label><input type="email" name="email" required></div><div class="field"><label>Mobile *</label><input name="mobile" required></div><div class="field"><label>Registration ID</label><input name="registrationID"></div><div class="field"><label>Category *</label><select name="category" required><option value="">Select</option><option>Registration</option><option>Event / Rules</option><option>Technical Problem</option><option>General Enquiry</option><option>Other</option></select></div><div class="field"><label>Message *</label><textarea name="message" rows="5" required></textarea></div><div id="formMsg" class="alert hidden"></div><button class="btn primary">SUBMIT ENQUIRY</button><div id="result"></div></form><form id="trackForm" class="card"><h2>Track Enquiry</h2><div class="field"><label>Enquiry ID</label><input name="enquiryID" placeholder="ENQ26-XXXXXX" required></div><button class="btn primary">TRACK</button><div id="trackResult" class="track-result"></div></form></div></section></main><footer class="footer"><div class="container"><div class="brand">ROBO<span>kriti</span> 2026</div><p>Army Public School, Lal Bahadur Shastri Marg, Lucknow, Uttar Pradesh</p><p>© <span data-year>2026</span> Army Public School Lal Bahadur Shastri Marg, Lucknow</p></div></footer><script type="module" src="js/navigation.js"></script><script type="module" src="js/firebase-init.js"></script><script type="module" src="js/database.js"></script><script type="module" src="js/enquiry.js"></script><script type="module" src="js/main.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="theme-color"
+        content="#020711">
+
+    <meta
+        name="description"
+        content="APS Tinkering Lab Robokriti 2026 Help Center">
+
+    <title>Help Center | APS Tinkering Lab Robokriti 2026</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="css/help.css">
+<link rel="stylesheet" href="css/production.css">
+<link rel="manifest" href="site.webmanifest">
+</head>
+
+
+<body>
+
+<div class="page-bg"></div>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="help-nav">
+
+    <div class="nav-brand">
+
+        <img
+            src="https://i.ibb.co/60g82LzR/Army-Welfare-Education-Society-logo-1.png"
+            alt="APS Logo">
+
+        <div>
+
+            <span>
+                APS TINKERING LAB
+            </span>
+
+            <strong>
+                ROBOKRITI 2026
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#events">
+            Rules
+        </a>
+
+        <!-- Hidden Helping Department Link -->
+        <a
+            href="agent.html"
+            class="agent-hidden-link"
+            aria-label="Agent">
+
+            •
+
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="help-container">
+
+
+    <section class="help-hero">
+
+        <div class="hero-badge">
+            APS SUPPORT CENTER
+        </div>
+
+        <h1>
+            How can we
+            <span>help?</span>
+        </h1>
+
+        <p>
+            Submit your question or issue and our support
+            team will get back to you.
+        </p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FORM CARD
+    ================================================= -->
+
+    <section class="help-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <span>
+                    SUPPORT REQUEST
+                </span>
+
+                <h2>
+                    Create a Ticket
+                </h2>
+
+            </div>
+
+            <div class="support-icon">
+                ?
+            </div>
+
+        </div>
+
+
+        <form id="helpForm" novalidate>
+
+
+            <!-- Registration ID -->
+
+            <div class="field">
+
+                <label for="registrationId">
+
+                    Registration ID
+
+                    <span class="optional">
+                        Optional
+                    </span>
+
+                </label>
+
+                <input
+                    id="registrationId"
+                    name="registrationId"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Example: APSRC2026-001">
+
+            </div>
+
+
+            <!-- Name -->
+
+            <div class="field">
+
+                <label for="name">
+                    Student Name
+                    <span>*</span>
+                </label>
+
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    autocomplete="name"
+                    placeholder="Enter your full name">
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <!-- Class -->
+
+                <div class="field">
+
+                    <label for="className">
+                        Class
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        id="className"
+                        name="className"
+                        required>
+
+                        <option value="">
+                            Select Class
+                        </option>
+
+                        <option value="VI">
+                            VI
+                        </option>
+
+                        <option value="VII">
+                            VII
+                        </option>
+
+                        <option value="VIII">
+                            VIII
+                        </option>
+
+                        <option value="IX">
+                            IX
+                        </option>
+
+                        <option value="X">
+                            X
+                        </option>
+
+                        <option value="XI">
+                            XI
+                        </option>
+
+                        <option value="XII">
+                            XII
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Section -->
+
+                <div class="field">
+
+                    <label for="section">
+                        Section
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        id="section"
+                        name="section"
+                        type="text"
+                        required
+                        maxlength="5"
+                        placeholder="A">
+
+                </div>
+
+            </div>
+
+
+            <!-- Email -->
+
+            <div class="field">
+
+                <label for="email">
+                    Email Address
+                    <span>*</span>
+                </label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autocomplete="email"
+                    placeholder="student@example.com">
+
+            </div>
+
+
+            <!-- Message Recipient -->
+
+            <div class="field">
+                <label for="messageRecipient">Message Like</label>
+                <select id="messageRecipient" name="messageRecipient">
+                    <option value="General Help">General Help</option>
+                    <option value="Feedback">Feedback</option>
+                    <option value="Appreciation">Appreciation</option>
+                    <option value="Complain">Complaint</option>
+                    <option value="APS Team">APS Tinkering Lab Robokriti Team</option>
+                </select>
+            </div>
+
+            <!-- Category -->
+
+            <div class="field">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category">
+
+                    <option value="Registration">
+                        Registration
+                    </option>
+
+                    <option value="Technical">
+                        Technical
+                    </option>
+
+                    <option value="Event">
+                        Event
+                    </option>
+
+                    <option value="Feedback">
+                        Feedback
+                    </option>
+
+                    <option value="General">
+                        General
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Subject -->
+
+            <div class="field">
+
+                <label for="subject">
+                    Subject
+                    <span>*</span>
+                </label>
+
+                <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    required
+                    maxlength="150"
+                    placeholder="What do you need help with?">
+
+            </div>
+
+
+            <!-- Message -->
+
+            <div class="field">
+
+                <label for="message">
+                    Message
+                    <span>*</span>
+                </label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    required
+                    maxlength="2000"
+                    rows="7"
+                    placeholder="Describe your problem clearly..."></textarea>
+
+                <div class="character-count">
+                    <span id="messageCount">
+                        0
+                    </span>
+                    / 2000
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div
+                id="formStatus"
+                class="form-status">
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div class="approval-note">Your request will start as <strong>Waiting for Approval</strong>. Our team will review it and contact you soon.</div>
+
+            <button
+                type="submit"
+                id="submitBtn"
+                class="submit-btn">
+
+                <span id="submitText">
+                    Submit Support Request
+                </span>
+
+                <span
+                    id="submitLoading"
+                    class="hidden">
+
+                    Submitting...
+
+                </span>
+
+            </button>
+
+
+            <p class="required-note">
+                * Required fields
+            </p>
+
+        </form>
+
+    </section>
+
+
+    <!-- =================================================
+         INFO
+    ================================================= -->
+
+    <section class="help-card tracker-card">
+        <div class="card-header">
+            <div><span>TRACK SUPPORT</span><h2>Check Your Help Progress</h2></div>
+            <div class="support-icon">↗</div>
+        </div>
+        <form id="helpTrackerForm" class="tracker-form">
+            <div class="field"><label for="trackerReference">Help Reference ID</label><input id="trackerReference" maxlength="9" placeholder="APS-XXXXX" autocomplete="off" required></div>
+            <button class="submit-btn" type="submit">Check Progress</button>
+        </form>
+        <div id="trackerStatus" class="tracker-status"></div>
+        <div id="trackerResult" class="tracker-result hidden">
+            <div class="tracker-top"><strong id="trackerStatusText">Waiting for Approval</strong><span id="trackerProgressText">0%</span></div>
+            <div class="tracker-bar"><span id="trackerProgress"></span></div>
+            <p id="trackerNote">Our team will review your request and contact you soon.</p>
+            <small>Last updated: <span id="trackerUpdated">-</span></small>
+        </div>
+    </section>
+
+    <section class="help-info">
+
+        <div>
+
+            <strong>
+                Ticket Tracking
+            </strong>
+
+            <p>
+                After submitting your request, you will receive a unique reference such as <strong>APS-A1B2C</strong>. Save it to check your progress anytime.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                Need Help?
+            </strong>
+
+            <p>
+                Please provide accurate information so
+                our support team can assist you quickly.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer
+    id="agentSecret"
+    class="site-footer"
+    title="">
+
+    <span>APS Tinkering Lab</span>
+    <span class="footer-dot">•</span>
+    <span>RoboKriti 2026</span>
+
+</footer>
+<!-- Hidden Helping Department Access -->
+<a
+    href="agent-login.html"
+    class="hidden-agent-link"
+    aria-label="Helping Department Portal">
+    Agent
+</a>
+<script type="module" src="js/help.js"></script>
+<script src="js/production.js"></script>
+</body>
+
+    </html>
