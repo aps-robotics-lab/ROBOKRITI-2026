@@ -1,1 +1,19 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Author Dashboard</title><meta name="description" content="RoboKriti 2026 — APS Tinkering Lab robotics championship. Build, battle and innovate."><link rel="stylesheet" href="../css/main.css"><link rel="stylesheet" href="../css/pages/author-dashboard.css"></head><body><main><section class="pagehead wrap"><span class="label">PRIVATE CONTROL ROOM</span><h1>COMMAND CENTER.</h1></section><section class="section"><div class="wrap grid g3"><div class="card reveal"><h3>REGISTRATIONS</h3><p class="muted">Manage team submissions.</p></div><div class="card reveal"><h3>HELP REQUESTS</h3><p class="muted">Manage support tickets.</p></div><div class="card reveal"><h3>STATISTICS</h3><p class="muted">Monitor event activity.</p></div></div></section></main><script src="../js/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05070b">
+<meta name="description" content="APS LBS ROBOKRITI 2026">
+<title>Author Dashboard | RoboKriti 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="../css/main.css">
+</head><body><div id="rk-loader" aria-hidden="true"><div class="rk-loader-inner"><div class="rk-loader-core"></div>ROBOKRITI 2026 // INITIALIZING</div></div><main class="author-page"><div class="author-shell">
+<div style="display:flex;justify-content:space-between;gap:20px;align-items:end"><div><div class="kicker">PRIVATE COMMAND</div><h1 class="page-title" style="font-size:70px">AUTHOR DASHBOARD</h1><p style="color:var(--muted)">Registration and Help management. Authorized users only.</p></div><button id="logout" class="btn secondary">SIGN OUT</button></div>
+<div class="stat-grid" style="margin-top:35px"><div class="stat"><small>REGISTRATIONS</small><b id="regCount">—</b></div><div class="stat"><small>HELP REQUESTS</small><b id="helpCount">—</b></div><div class="stat"><small>OPEN HELP</small><b id="openCount">—</b></div></div>
+<section style="margin-top:45px"><div class="kicker">REGISTRATION FEED</div><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>TEAM</th><th>LEAD</th><th>EVENTS</th><th>SIZE</th><th>STATUS</th></tr></thead><tbody id="regTable"></tbody></table></div></section>
+<section style="margin-top:45px"><div class="kicker">HELP FEED</div><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>NAME</th><th>CATEGORY</th><th>QUESTION</th><th>STATUS</th></tr></thead><tbody id="helpTable"></tbody></table></div></section>
+</div></main><script type="module" src="../js/author-dashboard.js"></script><script src="../js/main.js"></script></body></html>

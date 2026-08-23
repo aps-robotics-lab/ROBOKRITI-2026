@@ -1,1 +1,32 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registration — RoboKriti 2026</title><meta name="description" content="RoboKriti 2026 — APS Tinkering Lab robotics championship. Build, battle and innovate."><link rel="stylesheet" href="css/main.css"><link rel="stylesheet" href="css/pages/registration.css"></head><body><nav class="nav"><div class="wrap navin"><a class="brand" href="index.html"><span class="mark">RK</span><span>APS TINKERING LAB<small>ROBOKRITI 2026</small></span></a><div class="links"><a href="index.html">Home</a><a href="events.html">Events</a><a href="about.html">About</a><a href="team.html">Team</a><a href="rules.html">Rules</a><a href="help.html">Help</a><a href="contact.html">Contact</a><a class="btn gold" href="registration.html">Register Now</a></div><button type="button" class="hamb">☰</button></div></nav><main><section class="pagehead wrap"><span class="label">REGISTRATION // FREE ENTRY</span><h1>ENTER THE ARENA.</h1><p class="muted">02 September 2026 · APS LBS Marg · Maximum 5 members · Deadline 31 August 2026</p></section><section class="section"><div class="wrap split"><form class="card reveal" form" data-form><input class="input" name="team" required placeholder="Team Name"><input class="input" name="school" required placeholder="School"><select class="input" name="event" required><option value="">Select Event</option><option>Robo Soccer</option><option>Robo Tug of War</option><option>Robo Race</option><option>Robo War</option></select><input class="input" name="captain" required placeholder="Captain"><input class="input" name="class" required placeholder="Class (6–12)"><input class="input" name="email" required type="email" placeholder="Email"><input class="input" name="phone" required placeholder="Mobile"><input class="input" name="member2" placeholder="Member 2"><input class="input" name="member3" placeholder="Member 3"><input class="input" name="member4" placeholder="Member 4"><input class="input" name="member5" placeholder="Member 5"><button type="submit" class="btn gold">Submit Registration →</button><div class="status"></div></form><div><span class="label">READY TO BUILD?</span><h2>ONE TEAM.<br>ONE MACHINE.</h2><p class="muted">Registration is free for eligible students. Keep your confirmation/reference after submitting.</p></div></div></section></main><footer class="footer"><div class="wrap footgrid"><div><b style="color:#fff">APS TINKERING LAB<br>ROBOKRITI 2026</b><p>BUILD. BATTLE. INNOVATE.</p></div><div><b style="color:#fff">EXPLORE</b><p><a href="events.html">Events</a><br><a href="rules.html">Rules</a><br><a href="team.html">Team</a></p></div><div><b style="color:#fff">VENUE</b><p>Army Public School<br>Lal Bahadur Shastri Marg<br>Lucknow<br><br>02 September 2026 · Free Entry</p></div></div></footer><script src="js/main.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05070b">
+<meta name="description" content="APS LBS ROBOKRITI 2026">
+<title>Register | RoboKriti 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="../css/main.css">
+</head><body><div id="rk-loader" aria-hidden="true"><div class="rk-loader-inner"><div class="rk-loader-core"></div>ROBOKRITI 2026 // INITIALIZING</div></div>
+<div class="form-wrap"><div class="container"><a class="btn secondary" href="../index.html">← HOME</a><div style="height:20px"></div>
+<div class="form-card">
+<div class="kicker">ROBOKRITI 2026 // REGISTRATION</div><h1 class="page-title" style="font-size:clamp(44px,7vw,85px)">ENTER THE ARENA.</h1>
+<p class="form-note">FREE ENTRY · CLASSES 6–12 · MAXIMUM 5 MEMBERS · DEADLINE 31 AUGUST 2026</p>
+<form id="registrationForm">
+<section class="form-section"><div class="kicker">01 // TEAM</div><h2>Team Information</h2>
+<div class="field-grid"><div class="field full"><label>Team Name</label><input id="teamName" maxlength="80" placeholder="Optional team name"></div><div class="field"><label>Team Size *</label><select id="teamSize" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></div></section>
+<section class="form-section"><div class="kicker">02 // LEAD PARTICIPANT</div><h2>Captain / Lead</h2><div class="field-grid">
+<div class="field"><label>Full Name *</label><input id="leaderName" required></div><div class="field"><label>Class *</label><select id="leaderClass" required><option value="">Select</option><option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
+<div class="field"><label>Section *</label><input id="leaderSection" required></div><div class="field"><label>Mobile *</label><input id="mobile" required inputmode="numeric" maxlength="10"></div><div class="field full"><label>Email *</label><input id="email" type="email" required></div>
+</div></section>
+<section class="form-section"><div class="kicker">03 // TEAM MEMBERS</div><h2>Additional Members</h2><div id="members" class="member-grid"></div></section>
+<section class="form-section"><div class="kicker">04 // ARENA</div><h2>Select Event(s)</h2><div class="event-select">
+<label><input type="checkbox" value="Robo Soccer"> Robo Soccer</label><label><input type="checkbox" value="Robo Tug of War"> Robo Tug of War</label><label><input type="checkbox" value="Robo Race"> Robo Race</label><label><input type="checkbox" value="Robo War"> Robo War</label>
+</div><div class="field" style="margin-top:14px"><label>Remarks (optional)</label><textarea id="remarks" rows="4"></textarea></div></section>
+<section class="form-section"><label style="display:flex;gap:10px;align-items:flex-start;font-size:12px"><input id="agree" type="checkbox" required> I confirm the information is accurate and agree to follow the official championship rules and organiser instructions.</label><div id="formMessage" class="form-message"></div><button class="btn primary" type="submit">SUBMIT REGISTRATION →</button></section>
+</form></div></div></div>
+<script type="module" src="../js/registration.js"></script><script type="module" src="../js/main.js"></script></body></html>

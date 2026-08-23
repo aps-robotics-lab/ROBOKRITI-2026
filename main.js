@@ -1,97 +1,193 @@
-/* RoboKriti 2026 — interaction, animation, navigation and countdown layer */
-document.addEventListener('DOMContentLoaded',()=>{
-  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-  const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
-  document.body.dataset.page=page.replace('.html','');
+/* RoboKriti 2026 — core UI
+   This file is intentionally additive and keeps page-specific functionality separate. */
+const $=(s,c=document)=>c.querySelector(s);
+const $$=(s,c=document)=>[...c.querySelectorAll(s)];
 
-  // Progress + system UI
-  const progress=document.createElement('div'); progress.className='progress'; document.body.prepend(progress);
-  const grid=document.createElement('div'); grid.className='ui-grid'; document.body.appendChild(grid);
-  const back=document.createElement('button'); back.className='backtop'; back.type='button'; back.setAttribute('aria-label','Back to top'); back.textContent='↑'; document.body.appendChild(back);
-  const toast=document.createElement('div'); toast.className='toast'; toast.setAttribute('role','status'); document.body.appendChild(toast);
-  function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),3600)}
+document.documentElement.classList.add("js");
 
-  // Mobile nav + active link
-  const h=$('.hamb'), l=$('.links');
-  if(h&&l){h.setAttribute('aria-expanded','false');h.addEventListener('click',()=>{const open=l.classList.toggle('open');h.setAttribute('aria-expanded',String(open));h.textContent=open?'×':'☰'});}
-  $$('.links a').forEach(a=>{
-    const href=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
-    if(href===page) a.classList.add('active');
-    a.addEventListener('click',()=>l&&l.classList.remove('open'));
-  });
+// Mobile navigation
+const menu=$("[data-menu]"), mobile=$("[data-mobile-menu]");
+if(menu&&mobile){
+  const setMenu=(open)=>{
+    mobile.classList.toggle("open",open);
+    menu.setAttribute("aria-expanded",String(open));
+    document.body.classList.toggle("menu-open",open);
+  };
+  menu.addEventListener("click",()=>setMenu(!mobile.classList.contains("open")));
+  $$("a",mobile).forEach(a=>a.addEventListener("click",()=>setMenu(false)));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")setMenu(false)});
+}
 
-  // Scroll UI
-  let ticking=false;
-  function onScroll(){
-    const max=document.documentElement.scrollHeight-innerHeight;
-    progress.style.width=(max>0?(scrollY/max)*100:0)+'%';
-    $('.nav')?.classList.toggle('scrolled',scrollY>24);
-    back.classList.toggle('show',scrollY>500);
-    ticking=false;
-  }
-  addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(onScroll);ticking=true}}, {passive:true}); onScroll();
-  back.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
-
-  // Reveal observer
-  const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.10});
-  $$('.reveal').forEach((e,i)=>{e.classList.add('delay-'+((i%4)+1));observer.observe(e)});
-
-  // Add a small system badge to page headers, making every page feel part of one UI system
-  const ph=$('.pagehead');
-  if(ph&&!$('.page-kicker',ph)){
-    const kicker=document.createElement('div'); kicker.className='page-kicker'; kicker.innerHTML='<i></i> ROBOKRITI // SYSTEM ONLINE';
-    ph.appendChild(kicker);
-  }
-
-  // Pointer glow
-  if(matchMedia('(pointer:fine)').matches){
-    addEventListener('pointermove',e=>{document.body.style.setProperty('--mx',e.clientX+'px');document.body.style.setProperty('--my',e.clientY+'px')},{passive:true});
-    $$('.card').forEach(card=>{
-      card.addEventListener('pointermove',e=>{
-        if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-        card.style.transform=`perspective(900px) rotateX(${(-y*2.2).toFixed(2)}deg) rotateY(${(x*2.2).toFixed(2)}deg) translateY(-7px)`;
-      });
-      card.addEventListener('pointerleave',()=>card.style.transform='');
-    });
-  }
-
-  // Working countdown. Registration deadline is explicit; event date is fallback if a page uses data-event-countdown.
-  const countEls=$$('[data-count]');
-  if(countEls.length){
-    const target=Date.parse('2026-08-31T23:59:59+05:30');
-    let closed=false, last=[];
-    const countBox=$('.count');
-    const tick=()=>{
-      let diff=Math.max(0,target-Date.now());
-      const vals=[Math.floor(diff/86400000),Math.floor(diff/3600000)%24,Math.floor(diff/60000)%60,Math.floor(diff/1000)%60];
-      countEls.forEach((el,i)=>{const next=String(vals[i]).padStart(2,'0');if(last[i]!==next){el.parentElement?.classList.add('flip');setTimeout(()=>el.parentElement?.classList.remove('flip'),360);el.textContent=next;last[i]=next;}});
-      if(diff===0&&!closed&&countBox){closed=true;countBox.innerHTML='<div class="card" style="grid-column:1/-1;text-align:center"><span class="label">REGISTRATION STATUS</span><h3>REGISTRATION CLOSED</h3><p class="muted">The 31 August 2026 deadline has passed.</p></div>';}
-    };
-    tick(); setInterval(tick,1000);
-  }
-
-  // Form UX: validate, prevent accidental reload, generate a local reference, and route to the existing confirmation page.
-  $$('form[data-form]').forEach(form=>{
-    form.addEventListener('submit',e=>{
-      e.preventDefault();
-      if(!form.reportValidity()) return;
-      const btn=$('button[type="submit"]',form)||$('button',form);
-      if(btn){btn.disabled=true;btn.textContent='PROCESSING…'}
-      const data=Object.fromEntries(new FormData(form).entries());
-      const prefix=page==='registration.html'?'RK':'HELP';
-      const ref=prefix+'-'+new Date().toISOString().slice(0,10).replaceAll('-','')+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
-      try{localStorage.setItem('robokriti:'+ref,JSON.stringify({ref,createdAt:new Date().toISOString(),...data}));localStorage.setItem('robokriti:lastRef',ref)}catch(_){}
-      const status=$('.status',form);
-      if(status){status.classList.add('show');status.innerHTML='<b>SUBMISSION RECEIVED</b><br><span class="muted">Reference: '+ref+'</span>';}
-      showToast('Submission ready • Reference '+ref);
-      setTimeout(()=>{location.href=(page==='registration.html'?'registration-confirmation.html':'help-confirmation.html')+'?ref='+encodeURIComponent(ref)},650);
-    });
-  });
-
-  // Fix placeholder/no-op buttons on the home page
-  $$('a[href="#"]').forEach(a=>{a.setAttribute('href','rules-general.html');});
-
-  // FAQ accordion enhancement where headings/summary-like items exist
-  $$('details').forEach(d=>{d.addEventListener('toggle',()=>{if(d.open)d.scrollIntoView({behavior:'smooth',block:'nearest'})})});
+// Mark the current navigation item on every public page.
+const normalizePath=p=>{const x=p.replace(/\/+$/,"")||"/";return x.endsWith("/index.html")?x.slice(0,-10)||"/":x};
+const currentPath=normalizePath(location.pathname);
+$$(".desktop-nav a,.mobile-menu a").forEach(a=>{
+  const href=a.getAttribute("href");
+  if(!href || href.startsWith("#") || href.startsWith("http")) return;
+  try{
+    const link=normalizePath(new URL(href,location.href).pathname);
+    if(link===currentPath) a.classList.add("active");
+  }catch{}
 });
+
+// Scroll reveal: existing .reveal + automatic page-wide reveal.
+const revealEls=$$(".reveal");
+const autoReveal=$$("section:not(.hero),.page-hero,.page-content > .container > *, .form-section,.success-box,.author-grid > *, .stat-grid > *");
+autoReveal.forEach(el=>{if(!el.classList.contains("hero")) el.classList.add("rk-reveal")});
+$$(".events-grid,.why-grid,.journey,.team-grid,.rules-grid,.achievement-grid,.cards-3,.info-grid").forEach(el=>el.classList.add("rk-stagger"));
+
+const allReveal=[...new Set([...revealEls,...$$(".rk-reveal"),...$$(".rk-stagger")])];
+const show=el=>el.classList.add("visible","rk-visible");
+if("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){show(e.target);observer.unobserve(e.target)}});
+  },{threshold:.08,rootMargin:"0px 0px -8% 0px"});
+  allReveal.forEach(x=>observer.observe(x));
+}else allReveal.forEach(show);
+
+// Hero typewriter.
+const typeEl=$("[data-type]");
+if(typeEl){
+  const lines=["Built to Compete...","Programmed to Win...","Engineered at APS LBS Marg Tinkering Lab..."];
+  let i=0,j=0,deleting=false;
+  const type=()=>{
+    const text=lines[i];
+    typeEl.textContent=text.slice(0,j);
+    if(!deleting){
+      j++;
+      if(j>text.length){deleting=true;setTimeout(type,1100);return;}
+    }else{
+      j--;
+      if(j<0){deleting=false;i=(i+1)%lines.length;j=0;}
+    }
+    setTimeout(type,deleting?32:55);
+  };
+  type();
+}
+
+// Registration deadline countdown. The target can be overridden with
+// data-countdown-target, otherwise the official 31 Aug 2026 IST deadline is used.
+const countdown=$("#countdown");
+if(countdown){
+  const rawTarget=countdown.dataset.countdownTarget||"2026-08-31T23:59:59+05:30";
+  const target=Date.parse(rawTarget);
+  const days=$("[data-days]",countdown),hours=$("[data-hours]",countdown),
+        minutes=$("[data-minutes]",countdown),seconds=$("[data-seconds]",countdown);
+  const timerEl=$(".timer",countdown);
+  let previous=["","","",""];
+  let interval=null;
+  const close=()=>{
+    countdown.classList.add("closed");
+    if(timerEl) timerEl.innerHTML='<div class="closed-message"><strong>REGISTRATION CLOSED</strong><span>The 31 August 2026 registration deadline has passed.</span></div>';
+    const deadline=$(".deadline",countdown);
+    if(deadline) deadline.textContent="REGISTRATION IS NOW CLOSED";
+    if(interval) clearInterval(interval);
+  };
+  const tick=()=>{
+    if(!Number.isFinite(target)){console.error("RoboKriti countdown: invalid target date.");return;}
+    const diff=target-Date.now();
+    if(diff<=0){close();return;}
+    const vals=[
+      Math.floor(diff/86400000),
+      Math.floor(diff/3600000)%24,
+      Math.floor(diff/60000)%60,
+      Math.floor(diff/1000)%60
+    ];
+    [days,hours,minutes,seconds].forEach((el,k)=>{
+      if(!el)return;
+      const value=String(vals[k]).padStart(2,"0");
+      if(previous[k]!==value){
+        el.textContent=value;
+        const box=el.closest(".time");
+        if(box){
+          box.classList.remove("tick");
+          void box.offsetWidth;
+          box.classList.add("tick");
+        }
+      }
+      previous[k]=value;
+    });
+  };
+  tick();
+  interval=setInterval(tick,250);
+}
+
+// Global scroll UI.
+let lastY=window.scrollY;
+let ticking=false;
+const nav=$("[data-nav]");
+const progress=document.createElement("div");
+progress.id="rk-progress";
+document.body.appendChild(progress);
+
+const topButton=document.createElement("button");
+topButton.className="rk-top";
+topButton.type="button";
+topButton.setAttribute("aria-label","Back to top");
+topButton.innerHTML="↑";
+document.body.appendChild(topButton);
+topButton.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+const status=document.createElement("div");
+status.className="rk-status";
+status.innerHTML="<b>RK26</b> // SYSTEM ONLINE";
+document.body.appendChild(status);
+
+const updateScroll=()=>{
+  const doc=document.documentElement;
+  const max=Math.max(1,doc.scrollHeight-window.innerHeight);
+  progress.style.width=`${Math.min(100,(window.scrollY/max)*100)}%`;
+  if(nav){
+    nav.classList.toggle("scrolled",window.scrollY>20);
+    if(window.scrollY>120 && window.scrollY>lastY) nav.classList.add("nav-hidden");
+    else nav.classList.remove("nav-hidden");
+  }
+  topButton.classList.toggle("show",window.scrollY>500);
+  lastY=window.scrollY;
+  ticking=false;
+};
+window.addEventListener("scroll",()=>{if(!ticking){requestAnimationFrame(updateScroll);ticking=true}},{passive:true});
+updateScroll();
+
+// Lightweight pointer glow on desktop.
+if(matchMedia("(pointer:fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+  const cursor=document.createElement("div");
+  cursor.className="rk-cursor";
+  document.body.appendChild(cursor);
+  document.body.classList.add("rk-pointer");
+  let cx=-100,cy=-100,tx=-100,ty=-100;
+  const move=()=>{
+    cx+=(tx-cx)*.18;cy+=(ty-cy)*.18;
+    cursor.style.left=cx+"px";cursor.style.top=cy+"px";
+    requestAnimationFrame(move);
+  };
+  requestAnimationFrame(move);
+  window.addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY},{passive:true});
+  $$("a,button,.event-card,.why-card,.team-card,.rule-card,.achievement-card,.panel,.info-card").forEach(el=>{
+    el.addEventListener("mouseenter",()=>document.body.classList.add("rk-hover"));
+    el.addEventListener("mouseleave",()=>document.body.classList.remove("rk-hover"));
+  });
+}
+
+// Safe magnetic hover for primary actions; disabled on touch/reduced-motion.
+if(matchMedia("(pointer:fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+  $$(".btn.primary,.nav-cta").forEach(el=>{
+    el.addEventListener("pointermove",e=>{
+      const r=el.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.06,y=(e.clientY-r.top-r.height/2)*.06;
+      el.style.transform=`translate(${x}px,${y}px)`;
+    });
+    el.addEventListener("pointerleave",()=>{el.style.transform=""});
+  });
+}
+
+// Close loader after the page is ready; injected on every page by the build step.
+const loader=$("#rk-loader");
+if(loader){
+  const hide=()=>setTimeout(()=>loader.classList.add("hide"),120);
+  if(document.readyState==="complete") hide(); else window.addEventListener("load",hide,{once:true});
+}
+
+// Confirmation ticket fallback.
+const qs=name=>new URLSearchParams(location.search).get(name);
+const ticketEl=$("#ticket");
+if(ticketEl) ticketEl.textContent=qs("id")||"—";
