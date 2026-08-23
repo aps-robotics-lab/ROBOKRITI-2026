@@ -1,8 +1,1 @@
-import { auth, db } from './firebase-init.js';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
-import { ref, get } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js';
-export async function login(email,password){return signInWithEmailAndPassword(auth,email,password)}
-export async function logout(){return signOut(auth)}
-export function watchAuth(cb){return onAuthStateChanged(auth,cb)}
-export async function getStaff(uid){const s=await get(ref(db,`staff/${uid}`));return s.exists()?s.val():null}
-export async function requireStaff({role}={}){const user=auth.currentUser;if(!user) throw new Error('AUTH_REQUIRED');const staff=await getStaff(user.uid);if(!staff||staff.active!==true) throw new Error('STAFF_DISABLED');if(role&&staff.role!==role) throw new Error('FORBIDDEN');return {user,staff}}
+import{auth,db}from'./firebase-init.js';import{signInWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';import{ref,get}from'https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js';export const AUTHOR_UID='IwcIrwr38VhTh5uPTj6UCN32gFR2';export const login=(e,p)=>signInWithEmailAndPassword(auth,e,p);export const logout=()=>signOut(auth);export const watchAuth=cb=>onAuthStateChanged(auth,cb);export async function requireStaff(){const u=auth.currentUser;if(!u)throw Error('AUTH_REQUIRED');const s=await get(ref(db,`staff/${u.uid}`));if(!s.exists()||s.val().active!==true)throw Error('STAFF_DISABLED');return{user:u,staff:s.val()}}
