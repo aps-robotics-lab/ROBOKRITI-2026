@@ -1,0 +1,3 @@
+/* rules-general.html */
+.pagehead:before{content:"RULES-GENERAL";position:absolute;right:5%;bottom:35px;color:#ffffff08;font:800 100px 'Barlow Condensed';letter-spacing:.04em;pointer-events:none}
+.card{animation-delay:.1s}

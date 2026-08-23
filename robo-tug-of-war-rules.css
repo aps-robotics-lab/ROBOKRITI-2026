@@ -1,0 +1,3 @@
+/* robo-tug-of-war-rules.html */
+.pagehead:before{content:"ROBO-TUG-OF-WAR-RULES";position:absolute;right:5%;bottom:35px;color:#ffffff08;font:800 100px 'Barlow Condensed';letter-spacing:.04em;pointer-events:none}
+.card{animation-delay:.1s}
