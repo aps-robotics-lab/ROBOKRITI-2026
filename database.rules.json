@@ -1,18 +1,41 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
     "registrations": {
-      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
-      ".write": true
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('active').val() === true",
+      "$registrationId": {
+        ".write": "!data.exists() && newData.exists() && newData.child('registrationID').isString()"
+      },
+      ".indexOn": [
+        "registrationID",
+        "createdAt",
+        "status",
+        "teamName"
+      ]
     },
-    "helpRequests": {
-      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
-      ".write": true
+    "enquiries": {
+      ".read": "auth != null && root.child('staff').child(auth.uid).child('active').val() === true",
+      "$enquiryId": {
+        ".write": "!data.exists() && newData.exists() && newData.child('enquiryID').isString()"
+      },
+      ".indexOn": [
+        "enquiryID",
+        "createdAt",
+        "status"
+      ]
     },
-    "authorAccess": {
-      ".read": "auth != null && root.child('authorAccess').child(auth.uid).val() == true",
-      ".write": "auth != null && root.child('authorAccess').child(auth.uid).val() == true"
+    "staff": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.uid === 'IwcIrwr38VhTh5uPTj6UCN32gFR2' || root.child('staff').child(auth.uid).child('role').val() === 'author')",
+        ".write": "auth != null && auth.uid === 'IwcIrwr38VhTh5uPTj6UCN32gFR2'"
+      }
+    },
+    "content": {
+      ".read": true,
+      ".write": "auth != null && auth.uid === 'IwcIrwr38VhTh5uPTj6UCN32gFR2'"
+    },
+    "audit": {
+      ".read": "auth != null && auth.uid === 'IwcIrwr38VhTh5uPTj6UCN32gFR2'",
+      ".write": "auth != null && auth.uid === 'IwcIrwr38VhTh5uPTj6UCN32gFR2'"
     }
   }
 }

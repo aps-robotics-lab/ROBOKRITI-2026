@@ -1,10 +1,1 @@
-/* RoboKriti Team */
-.page-hero{background:radial-gradient(circle at 55% 20%,rgba(55,231,255,.08),transparent 30%)}
-.page-content{padding:65px 0 130px}
-.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.team-card{padding:28px;min-height:260px;position:relative;overflow:hidden}
-.team-card:after{content:"TEAM / NODE";position:absolute;right:18px;top:18px;font:8px "DM Mono";color:var(--muted)}
-.team-card h3{font:700 28px "Space Grotesk";margin:55px 0 8px}
-.team-card p{color:var(--muted);line-height:1.65}
-@media(max-width:900px){.team-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.team-grid{grid-template-columns:1fr}}
+.team-hero{min-height:68vh}.team-feature{display:grid;grid-template-columns:1fr 1fr;gap:18px}.team-feature .panel{min-height:340px}@media(max-width:900px){.team-feature{grid-template-columns:1fr}}

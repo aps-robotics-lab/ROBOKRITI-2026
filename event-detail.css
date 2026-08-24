@@ -1,9 +1,1 @@
-/* RoboKriti event detail pages */
-.page-hero{background:radial-gradient(circle at 75% 25%,rgba(55,231,255,.08),transparent 30%)}
-.page-content{padding:60px 0 130px}
-.page-content .panel{padding:32px;min-height:200px}
-.page-content .panel h2{font:700 clamp(30px,4vw,54px) "Space Grotesk"}
-.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.cards-3 .panel{min-height:240px}
-.message{margin-top:20px}
-@media(max-width:800px){.cards-3{grid-template-columns:1fr}.page-content{padding-top:40px}}
+.arena-hero{min-height:82vh}.arena-visual{height:620px;border-radius:50% 50% 20px 20px;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.13),transparent 15%),radial-gradient(circle at 50% 65%,rgba(104,57,255,.22),transparent 42%),#070707;border:1px solid var(--line);position:relative;overflow:hidden}.arena-visual:before{content:"";position:absolute;inset:10%;border:1px dashed rgba(255,255,255,.12);border-radius:50%;animation:spin 18s linear infinite}.arena-visual:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,rgba(255,255,255,.4),transparent)}.arena-mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:500 clamp(60px,10vw,140px)/.8 Cormorant Garamond,serif;text-align:center;white-space:nowrap}.arena-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}.arena-fact{padding:25px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.025)}.arena-fact small{display:block;font:500 8px DM Mono,monospace;color:#877c76;letter-spacing:.18em}.arena-fact strong{display:block;margin-top:10px;font-size:16px}@media(max-width:700px){.arena-visual{height:430px}.arena-facts{grid-template-columns:1fr}}
